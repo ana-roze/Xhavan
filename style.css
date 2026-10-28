@@ -30,7 +30,8 @@ body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
-    direction: rtl;
+    direction: ltr;
+    text-align: left;
 }
 
 a {
@@ -234,7 +235,7 @@ img {
 .video-thumbnail {
     position: relative;
     width: 100%;
-    padding-top: 56.25%; /* 16:9 aspect ratio */
+    padding-top: 56.25%;
     background-color: var(--bg-tertiary);
     overflow: hidden;
 }
@@ -292,7 +293,7 @@ img {
     overflow: hidden;
     margin-bottom: 20px;
     position: relative;
-    padding-top: 56.25%; /* 16:9 */
+    padding-top: 56.25%;
 }
 
 .video-player iframe,
@@ -381,7 +382,7 @@ img {
     background-color: var(--bg-tertiary);
     padding: 15px;
     border-radius: var(--radius);
-    border-right: 3px solid var(--accent);
+    border-left: 3px solid var(--accent);
 }
 
 .comment-header {
@@ -502,9 +503,10 @@ img {
 .admin-sidebar {
     width: 250px;
     background-color: var(--bg-secondary);
-    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
     padding: 20px 0;
     position: fixed;
+    left: 0;
     height: 100vh;
     overflow-y: auto;
 }
@@ -531,11 +533,11 @@ img {
     background: none;
     border: none;
     color: var(--text-secondary);
-    text-align: right;
+    text-align: left;
     cursor: pointer;
     transition: var(--transition);
     font-size: 1rem;
-    border-right: 3px solid transparent;
+    border-left: 3px solid transparent;
 }
 
 .nav-btn:hover {
@@ -546,12 +548,12 @@ img {
 .nav-btn.active {
     background-color: var(--bg-hover);
     color: var(--accent);
-    border-right-color: var(--accent);
+    border-left-color: var(--accent);
 }
 
 .admin-main {
     flex: 1;
-    margin-right: 250px;
+    margin-left: 250px;
     padding: 30px;
 }
 
@@ -644,7 +646,7 @@ img {
 
 .form-group input[type="checkbox"] {
     width: auto;
-    margin-left: 8px;
+    margin-right: 8px;
 }
 
 .btn-primary {
@@ -716,7 +718,7 @@ img {
 
 .admin-table th {
     padding: 15px;
-    text-align: right;
+    text-align: left;
     color: var(--text-primary);
     font-weight: 600;
     border-bottom: 1px solid var(--border);
@@ -726,6 +728,7 @@ img {
     padding: 15px;
     border-bottom: 1px solid var(--border);
     color: var(--text-secondary);
+    text-align: left;
 }
 
 .admin-table tr:hover {
@@ -795,7 +798,7 @@ img {
 .close-btn {
     position: absolute;
     top: 15px;
-    left: 15px;
+    right: 15px;
     font-size: 2rem;
     color: var(--text-secondary);
     cursor: pointer;
@@ -840,7 +843,7 @@ img {
     }
     
     .admin-main {
-        margin-right: 200px;
+        margin-left: 200px;
     }
 }
 
@@ -870,7 +873,7 @@ img {
     }
     
     .admin-main {
-        margin-right: 0;
+        margin-left: 0;
     }
     
     .admin-dashboard {
@@ -906,4 +909,4 @@ img {
     .logo h1 {
         font-size: 1.5rem;
     }
-  }
+    }
