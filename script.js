@@ -481,8 +481,29 @@ async function loadVideoPage() {
 
 function renderVideoPlayer(video) {
     const player = document.getElementById('videoPlayer');
-    if (player) {
-        player.innerHTML = getVideoEmbed(video.video_url);
+    if (!player) return;
+
+    const videoType = video.video_type || 'direct';
+    const videoContent = video.video_url;
+
+    if (videoType === 'embed') {
+        player.innerHTML = videoContent;
+        const iframe = player.querySelector('iframe');
+        if (iframe) {
+            iframe.removeAttribute('width');
+            iframe.removeAttribute('height');
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+        }
+    } else {
+        player.innerHTML = `
+            <video controls autoplay playsinline style="width:100%; height:100%; background:#000; object-fit:contain;">
+                <source src="${videoContent}" type="video/mp4">
+                <source src="${videoContent}" type="video/webm">
+                Your browser does not support the video tag.
+            </video>
+        `;
     }
 }
 
@@ -728,6 +749,20 @@ function setupAdminEvents() {
             saveVideo();
         });
     }
+
+        // Toggle between Direct Link and Embed Code inputs
+    const videoSourceType = document.getElementById('videoSourceType');
+    if (videoSourceType) {
+        videoSourceType.addEventListener('change', function() {
+            if (this.value === 'direct') {
+                document.getElementById('directLinkGroup').style.display = 'block';
+                document.getElementById('embedCodeGroup').style.display = 'none';
+            } else {
+                document.getElementById('directLinkGroup').style.display = 'none';
+                document.getElementById('embedCodeGroup').style.display = 'block';
+            }
+        });
+    }
     
     // Add Ad Button
     const addAdBtn = document.getElementById('addAdBtn');
@@ -861,10 +896,20 @@ async function editVideo(id) {
 
 async function saveVideo() {
     const id = document.getElementById('videoId').value;
+    const sourceType = document.getElementById('videoSourceType').value;
+    
+    let videoContent = '';
+    if (sourceType === 'direct') {
+        videoContent = document.getElementById('videoUrlInput').value;
+    } else {
+        videoContent = document.getElementById('videoEmbedInput').value;
+    }
+
     const videoData = {
         title: document.getElementById('videoTitleInput').value,
         description: document.getElementById('videoDescInput').value,
-        video_url: document.getElementById('videoUrlInput').value,
+        video_url: videoContent,
+        video_type: sourceType, // New column
         thumbnail_url: document.getElementById('thumbnailUrlInput').value,
         category: document.getElementById('categoryInput').value,
         is_published: document.getElementById('publishedInput').checked
