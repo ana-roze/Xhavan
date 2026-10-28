@@ -174,8 +174,8 @@ function formatViews(views) {
 // Get category display name
 function getCategoryName(cat) {
     const categories = {
-        'education': 'Education',
-        'entertainment': 'Entertainment',
+        'western': 'Western',
+        'asian': 'Asian',
         'tech': 'Technology',
         'vlogs': 'Vlogs'
     };
