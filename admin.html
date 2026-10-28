@@ -10,7 +10,7 @@
     <!-- Login Screen -->
     <div id="loginScreen" class="login-screen">
         <div class="login-box">
-            <h1> Admin Login</h1>
+            <h1>🔐 Admin Login</h1>
             <form id="loginForm">
                 <div class="form-group">
                     <label>Email</label>
@@ -36,7 +36,7 @@
             <nav class="sidebar-nav">
                 <button class="nav-btn active" data-section="dashboard">📊 Dashboard</button>
                 <button class="nav-btn" data-section="videos">🎥 Videos</button>
-                <button class="nav-btn" data-section="comments"> Comments</button>
+                <button class="nav-btn" data-section="comments">💬 Comments</button>
                 <button class="nav-btn" data-section="ads">📢 Ads</button>
                 <button class="nav-btn" id="logoutBtn">🚪 Logout</button>
             </nav>
@@ -74,29 +74,51 @@
                     <button id="addVideoBtn" class="btn-primary">+ Add New Video</button>
                 </div>
                 
-                <!-- Video Form Modal -->
+                <!-- Video Form Modal (UPDATED) -->
                 <div id="videoFormModal" class="modal" style="display: none;">
                     <div class="modal-content">
                         <span class="close-btn">&times;</span>
                         <h2 id="formTitle">Add New Video</h2>
                         <form id="videoForm">
                             <input type="hidden" id="videoId">
+                            
                             <div class="form-group">
                                 <label>Title</label>
                                 <input type="text" id="videoTitleInput" required>
                             </div>
+                            
                             <div class="form-group">
                                 <label>Description</label>
                                 <textarea id="videoDescInput" rows="4"></textarea>
                             </div>
+
+                            <!-- NEW: Video Source Type Selection -->
                             <div class="form-group">
-                                <label>Video URL</label>
-                                <input type="url" id="videoUrlInput" required>
+                                <label>Video Source Type</label>
+                                <select id="videoSourceType">
+                                    <option value="direct">Direct Link (MP4, WebM, etc.)</option>
+                                    <option value="embed">Embed Code (HTML iframe)</option>
+                                </select>
                             </div>
+
+                            <!-- NEW: Direct Link Input (Visible by default) -->
+                            <div class="form-group" id="directLinkGroup">
+                                <label>Direct Video URL</label>
+                                <input type="url" id="videoUrlInput" placeholder="https://example.com/video.mp4">
+                            </div>
+
+                            <!-- NEW: Embed Code Input (Hidden by default) -->
+                            <div class="form-group" id="embedCodeGroup" style="display: none;">
+                                <label>Paste Embed Code</label>
+                                <textarea id="videoEmbedInput" rows="5" placeholder="<iframe src='...' width='560' height='315'></iframe>"></textarea>
+                                <small style="color: var(--text-muted); display: block; margin-top: 5px;">Paste the full HTML iframe code here.</small>
+                            </div>
+                            
                             <div class="form-group">
                                 <label>Thumbnail URL</label>
                                 <input type="url" id="thumbnailUrlInput" required>
                             </div>
+                            
                             <div class="form-group">
                                 <label>Category</label>
                                 <select id="categoryInput">
@@ -106,12 +128,14 @@
                                     <option value="vlogs">Vlogs</option>
                                 </select>
                             </div>
+                            
                             <div class="form-group">
                                 <label>
                                     <input type="checkbox" id="publishedInput">
                                     Publish
                                 </label>
                             </div>
+                            
                             <button type="submit" class="btn-primary">Save</button>
                         </form>
                     </div>
@@ -229,4 +253,4 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
 </body>
-    </html>
+</html>
