@@ -309,66 +309,57 @@ async function loadIndexPage() {
     setupIndexEvents();
 }
 
-function renderVideoPlayer(video) {
-    const player = document.getElementById('videoPlayer');
-    if (!player) return;
-
-    const videoType = video.video_type || 'direct';
-    let videoContent = video.video_url;
-
-    if (videoType === 'embed') {
-        // Check if it's a Google Drive link
-        if (videoContent.includes('drive.google.com')) {
-            // Extract file ID automatically
-            const fileIdMatch = videoContent.match(/\/file\/d\/([^\/\?]+)/);
-            if (fileIdMatch) {
-                const fileId = fileIdMatch[1];
-                // Create a perfectly responsive Google Drive iframe
-                player.innerHTML = `
-                    <iframe 
-                        src="https://drive.google.com/file/d/${fileId}/preview" 
-                        style="width: 100%; height: 100%; min-height: 400px; border: none;"
-                        allow="autoplay; fullscreen" 
-                        allowfullscreen>
-                    </iframe>
-                `;
-            } else {
-                // Fallback if ID extraction fails
-                player.innerHTML = videoContent;
-            }
-        } else {
-            // For other embed codes (YouTube, Vimeo, etc.)
-            player.innerHTML = videoContent;
-            
-            // Force responsiveness on any iframe inside the player
-            const iframe = player.querySelector('iframe');
-            if (iframe) {
-                iframe.removeAttribute('width');
-                iframe.removeAttribute('height');
-                iframe.style.width = '100%';
-                iframe.style.height = '100%';
-                iframe.style.minHeight = '400px';
-                iframe.style.border = 'none';
-                
-                // Add allow attributes if missing
-                if (!iframe.hasAttribute('allow')) {
-                    iframe.setAttribute('allow', 'autoplay; fullscreen');
-                }
-                if (!iframe.hasAttribute('allowfullscreen')) {
-                    iframe.setAttribute('allowfullscreen', 'true');
-                }
-            }
-        }
-    } else {
-        // Direct video link (MP4, etc.)
-        player.innerHTML = `
-            <video controls autoplay playsinline style="width:100%; height:100%; min-height: 400px; background:#000; object-fit:contain;">
-                <source src="${videoContent}" type="video/mp4">
-                <source src="${videoContent}" type="video/webm">
-                Your browser does not support the video tag.
-            </video>
-        `;
+function renderVideos(videos) {
+    const grid = document.getElementById('videoGrid');
+    if (!grid) return;
+    
+    // Filter
+    let filtered = videos;
+    if (currentCategory !== 'all') {
+        filtered = filtered.filter(v => v.category === currentCategory);
     }
+    
+    // Search
+    if (currentSearch) {
+        const search = currentSearch.toLowerCase();
+        filtered = filtered.filter(v => 
+            v.title.toLowerCase().includes(search) ||
+            v.description.toLowerCase().includes(search)
+        );
+    }
+    
+    // Sort
+    if (currentSort === 'newest') {
+        filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    } else if (currentSort === 'popular') {
+        filtered.sort((a, b) => b.views - a.views);
+    } else if (currentSort === 'az') {
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
+    }
+    
+    if (filtered.length === 0) {
+        grid.innerHTML = '<div class="loading">No videos found</div>';
+        return;
+    }
+    
+    grid.innerHTML = filtered.map((video, index) => {
+        const adInsert = (index > 0 && index % 6 === 0) ? getAdBetweenHTML() : '';
+        return `
+            ${adInsert}
+            <div class="video-card" onclick="openVideo('${video.id}')">
+                <div class="video-thumbnail">
+                    <img src="${video.thumbnail_url}" alt="${video.title}" loading="lazy">
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">${video.title}</h3>
+                    <div class="video-meta">
+                        <span>👁️ ${formatViews(video.views)} views</span>
+                        <span>${getCategoryName(video.category)}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
 function getAdBetweenHTML() {
